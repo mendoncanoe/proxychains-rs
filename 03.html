@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Testando  Jascript</title>
+	<meta charset="utf-8">
+	<script>
+		var quebrada =false;
+		function mudaLampada(tipo) {
+			if (tipo ==1) {
+				arquivo="lampada-acesa.jpg";
+			}
+			if (tipo ==2) {
+				arquivo="lampada-apagada.jpg";
+			}
+			if (tipo ==3) {
+				arquivo="lampada-quebrada.jpg";
+				
+
+			}
+			if (!quebrada) {
+			document.getElementById("luz"). src= arquivo;
+			if (tipo==3) {
+				quebrada=true;
+			}
+		   }
+		}
+		
+		
+	</script>
+</head>
+<body>
+<h1>Acenda a lâmpada</h1>
+<img src="lampada-apagada.jpg " id="luz" onmousemove="mudaLampada(1)" onmouseout="mudaLampada(2) "  onclick="mudaLampada(3) " />
+<script>
+
+
+</script>
+</body>
+</html>
